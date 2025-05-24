@@ -1,162 +1,199 @@
-import React from "react";
 import styled, { css } from "styled-components";
 
-const BUTTON_VARIANTS = {
-  btnPlus: {
-    width: "48px",
-    height: "36px",
-    fontSize: "20px",
-    borderRadius: "8px",
-    border: "1px solid #8A2B06",
-    color: "#8A2B06",
-    hovers: {
-      background: "#8A2B06",
-      color: "#FFFFFF",
-    },
-    active: {
-      background: "#993108",
-      transform: "scale(1.1)",
-    },
-    disabled: {
-      background: "#CAC6C4",
-      color: "#FFFFFF",
-      cursor: "not-allowed",
-    },
-  },
-
-  btnMinus: {
-    width: "48px",
-    height: "36px",
-    fontSize: "20px",
-    borderRadius: "8px",
-    border: "1px solid #8A2B06",
-    color: "#8A2B06",
-    hovers: {
-      background: "#8A2B06",
-      color: "#FFFFFF",
-    },
-    active: {
-      background: "#993108",
-      transform: "scale(1.1)",
-    },
-    disabled: {
-      background: "#CAC6C4",
-      color: "#FFFFFF",
-      cursor: "not-allowed",
-    },
-  },
-
-  btnAdd: {
+const BUTTON_VARIANT = {
+  Addplus: {
     width: "99px",
     height: "41px",
-    background: "#8A2B06",
-    color: "#FFFFFF",
-    fontWeight: "bold",
-    borderRadius: "20px",
-    border: "none",
+    background: "#8a2b06",
+    padding: "10px 24px",
+    color: "white",
     fontSize: "14px",
-    hovers: {
-      background: "#7E2A0A",
-    },
-    active: {
-      background: "#993108",
-      transform: "scale(1.1)",
-    },
-    disabled: {
-      background: "#CAC6C4",
-    },
-  },
-
-  btnClose: {
-    width: "110px",
-    height: "44px",
-    border: "1px solid #8A2B06",
-    color: "#8A2B06",
-    fontSize: "16px",
-    borderRadius: "20px",
-    hovers: {
-      background: "#8A2B06",
-      color: "#FFFFFF",
-    },
-    active: {
-      background: "#993108",
-      color: "#FFFFFF",
-      transform: "scale(1.1)",
-    },
-    disabled: {
-      border: "1px solid #CAC6C4",
-      color: "#CAC6C4",
-    },
-  },
-
-  btnOrder: {
-    width: "110px",
-    height: "44px",
-    background: "#8A2B06",
-    color: "#FFFFFF",
-    fontSize: "16px",
-    fontWeight: "bold",
+    fontWeight: "700",
     borderRadius: "20px",
     border: "none",
+
     hovers: {
-      background: "#7E2A0A",
+      background: "#7e2a0a",
+      color: "#ffffff",
+    },
+
+    before: {
+      content: '"+ "',
+      textTransform: "uppercase",
+      fontWeight: "100",
+      color: "#ffffff",
+      paddingRight: "8px",
+    },
+
+    active: {
+      background: "#993108",
+      color: "#ffffff",
+      transform: "scale(1.1)",
+    },
+
+    disabled: {
+      border: "2px solid #cac6c4",
+      color: "#cac6c4",
+      background: "transparent",
+      userSelect: "none",
+      pointerEvents: "none",
+      cursor: "not-allowed",
+    },
+  },
+  close: {
+    width: "110px",
+    height: "44px",
+    border: "1px solid #8a2b06",
+    color: "#8a2b06",
+    lineHeight: "100",
+    fontWeight: "bold",
+    borderRadius: "20px",
+
+    hovers: {
+      background: "#8a2b06",
+      color: "#fff",
+    },
+
+    active: {
+      background: "#993108",
+      color: "#fff",
+      transform: "scale(1.1)",
+    },
+
+    disabled: {
+      border: "2px solid #cac6c4",
+      color: "#cac6c4",
+      userSelect: " none",
+      pointerEvents: "none",
+      cursor: "not-allowed",
+    },
+  },
+
+  order: {
+    width: "110px",
+    height: "44px",
+    background: "#8a2b06",
+    color: "#ffffff",
+    fontWeight: "500",
+    lineHeight: "100",
+    borderRadius: "20px",
+    border: "none",
+
+    hovers: {
+      background: "#7e2a0a",
+      color: "#fff",
     },
     active: {
       background: "#993108",
+      color: "#fff",
+      transform: "scale(1.1)",
+    },
+
+    disabled: {
+      background: "#cac6c4",
+      userSelect: "none",
+      pointerEvents: "none",
+      cursor: "not-allowed",
+      lightingColor: "#ffffff",
+    },
+  },
+
+  PlusMinus: {
+    border: "2px solid #8a2b06",
+    color: "#8a2b06",
+    borderRadius: "6px",
+    width: "48px",
+    height: "36px",
+    fontSize: "20px",
+
+    hovers: {
+      background: "#8a2b06",
+      color: "#ffffff",
+    },
+    active: {
+      background: "#993108",
+      color: "#ffffff",
       transform: "scale(1.1)",
     },
     disabled: {
-      background: "#CAC6C4",
-      color: "#FFFFFF",
+      border: "2px solid #cac6c4",
+      color: "#cac6c4",
+      userSelect: "none",
+      pointerEvents: "none",
+      cursor: "not-allowed",
     },
   },
 };
 
-export const Button = ({ title, type, disabled, onClick }) => {
-  const variant = BUTTON_VARIANTS[type];
-
-  if (!variant) {
-    console.error(`Button variant "${type}" not found.`);
-    return null;
-  }
-
+export const Button = ({ 
+  variant, 
+  disabled, 
+  title, 
+  onClick,
+type = 'text',
+}) => {
   return (
-    <StyledButton variant={variant} disabled={disabled} onClick={onClick}>
+    <MyButton 
+    type={type} 
+    variant={variant} 
+    disabled={disabled} 
+    onClick={onClick}>
       {title}
-    </StyledButton>
+    </MyButton>
   );
 };
 
-const StyledButton = styled.button`
+const buttonVariant = ({ variant, disabled = false }) => {
+  const style = BUTTON_VARIANT[variant];
+
+  return css`
+    width: ${style.width};
+    height: ${style.height};
+    padding: ${style.padding};
+    color: ${style.color};
+    background: ${style.background};
+    font-size: ${style.fontSize};
+    font-weight: ${style.fontWeight};
+    border-radius: ${style.borderRadius};
+    border: ${style.border};
+
+    &::before {
+      content: ${style.before?.content};
+      font-weight: ${style.before?.fontWeight};
+      color: ${style.before?.color};
+      padding-right: ${style.before?.paddingRight};
+      text-transform: ${style.textTransform};
+    }
+
+    &:hover {
+      ${!disabled &&
+      css`
+        background: ${style.hovers?.background};
+        color: ${style.hovers?.color};
+      `}
+    }
+
+    &:active {
+      ${!disabled &&
+      css`
+        background: ${style.active?.background};
+        color: ${style.active?.color};
+        transform: ${style.active?.transform};
+      `}
+    }
+
+    &:disabled {
+      border: ${style.disabled?.border};
+      color: ${style.disabled?.color};
+      background: ${style.disabled?.background};
+      cursor: ${style.disabled?.cursor};
+      user-select: ${style.disabled?.userSelect};
+      pointer-events: ${style.disabled?.pointerEvents};
+    }
+  `;
+};
+
+const MyButton = styled.button`
   cursor: pointer;
-  ${(props) =>
-    props.variant &&
-    css`
-      width: ${props.variant.width};
-      height: ${props.variant.height};
-      background: ${props.variant.background || "transparent"};
-      color: ${props.variant.color};
-      font-size: ${props.variant.fontSize};
-      font-weight: ${props.variant.fontWeight};
-      border-radius: ${props.variant.borderRadius};
-      border: ${props.variant.border};
-
-      &:hover {
-        background: ${!props.disabled && props.variant.hovers?.background};
-        color: ${!props.disabled && props.variant.hovers?.color};
-      }
-
-      &:active {
-        background: ${!props.disabled && props.variant.active?.background};
-        color: ${!props.disabled && props.variant.active?.color};
-        transform: ${!props.disabled && props.variant.active?.transform};
-      }
-
-      &:disabled {
-        background: ${props.variant.disabled?.background};
-        color: ${props.variant.disabled?.color};
-        border: ${props.variant.disabled?.border};
-        cursor: ${props.variant.disabled?.cursor || "not-allowed"};
-      }
-    `}
+  ${(props) => buttonVariant(props)};
 `;

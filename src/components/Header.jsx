@@ -1,26 +1,52 @@
-import React from 'react'
-import styled from 'styled-components';
+import React, { useContext, useEffect, useState } from 'react'
+import styled, { keyframes } from 'styled-components';
 import BasketIcon from '../assets/basket.png';
+import { BasketContext } from '../store/BasketProvider';
+import {css} from 'styled-components';
 
 //defaultProps
 export const Header = (props) => {
-    const { mealsCount = 0} = props;
+    const {onOpen} = props; // Себетти ачуу функциясын props аркылуу алабыз
+    const {meals} = useContext(BasketContext); // Контексттен тамактардын тизмесин алабыз
 
-  return (
-    <StyledHeader>
-        <Wrapper>
-           <Title>ReactMeals</Title>
-            <BasketWrapper>
-                <img src={BasketIcon} alt="basket" />
-                <YourCardDiv>Your cart</YourCardDiv>
-                <CountofMeals>{mealsCount}</CountofMeals>
-            </BasketWrapper>
-      
-        </Wrapper>
-    </StyledHeader>
- 
-  )
+    const [animation, setAnimation] = useState(false); // анимация абалы (on/off)
+
+    // meals массивиндеги бардык тамактардын суммардык саны
+    const mealCountReduce = meals.reduce((prev, curr) => {
+        return prev + +curr.amount; // "+" менен санга айлантуу
+    }, 0);
+
+    // meals өзгөргөн сайын анимацияны иштетүү (useEffect)
+    useEffect(() => {
+        setAnimation(true); // анимация башталат
+
+        // 500 миллисекунддан кийин анимация өчөт
+        const timer = setTimeout(() => {
+            setAnimation(false);
+        }, 500);
+
+        // Компонент жок кылынса таймерди тазалоо
+        return () => {
+            clearTimeout(timer);
+        }
+    }, [meals]);
+
+    return (
+        <StyledHeader>
+            <Wrapper>
+                <Title>ReactMeals</Title> {/* Логотип же сайттын аты */}
+
+                <BasketWrapper onClick={onOpen} animation={animation}>
+                    <img src={BasketIcon} alt="basket" />
+                    <YourCardDiv>Your cart</YourCardDiv>
+                    <CountofMeals>{mealCountReduce}</CountofMeals>
+                </BasketWrapper>
+
+            </Wrapper>
+        </StyledHeader>
+    )
 };
+
 const StyledHeader = styled.header`
     background: ${({theme}) => theme.colors.cherry};
     color: white;
@@ -43,7 +69,29 @@ const Wrapper = styled.div`
 const Title = styled.h1`
     font-size: 38px;
     font-weight: 600;
-`
+`;
+
+const jumping = keyframes`
+    from {
+        transform: translateY(-5px);
+    }
+    to {
+        transform: translateY(5px);
+    }
+`;
+
+function animate(props) {
+    const {animation} = props;
+
+            if (!animation) {
+                return css``; // анимация өчүрүлгөндө эч нерсе колдонулбайт
+            };
+
+    return css`
+       animation: ${jumping} 0.1s linear infinite alternate-reverse;
+    `;
+}
+
 const BasketWrapper = styled.div`
     background: ${({theme}) => {
         return theme.colors.darkCherry
@@ -53,7 +101,12 @@ const BasketWrapper = styled.div`
     display: flex;
     align-items: center;
     cursor: pointer;
+
+    img {
+        ${animate} 
+    }
 `;
+
 
 const YourCardDiv = styled.div`
     font-weight: 600;

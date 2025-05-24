@@ -1,20 +1,45 @@
 import styled from "styled-components";
+import { Button } from "./UI/Button";
+import { useContext, useRef } from "react";
+import { BasketContext } from "../store/BasketProvider";
+
 
 //statfull
 //statless
 export const MealItem = (props) => {
-    const {description, id, price, title} = props;
-  return (
-    <StyledDiv>
-    <MealItemDescription
-    description = {description}
-    price = {price}
-    title = {title}
-    />
-    <MealItemAction/>
-    </StyledDiv>
-  );
+    const {description, id, price, title} = props; // Пропстардан маалыматтар алынат
+
+    const ctx = useContext(BasketContext); // Контексттен себеттин функцияларын алабыз
+
+    const inputRef = useRef(null); // Input элементине сылтама
+
+    const onSubmit = (e) => {
+        e.preventDefault(); // Форманын стандарттык жүктөлүшүн токтотуу
+
+        // Себетке кошуу үчүн тамактын маалыматтары
+        const mealinfo = {
+            price: price,
+            title: title,
+            id: id,
+            amount: inputRef.current.value, // Колдонуучунун киргизген саны
+        };
+
+        ctx.addToBasket(mealinfo); // Контексттин методун чакырып себетке кошуу
+    }
+  
+    return (
+        <StyledDiv onSubmit={onSubmit}>
+            <MealItemDescription
+                description={description}
+                price={price}
+                title={title}
+            />
+            {/* Колдонуучу канча тамак кошо турганын көрсөтүүчү бөлүк */}
+            <MealItemAction ref={inputRef} />
+        </StyledDiv>
+    );
 };
+
 const MealItemDescription = ({description, price, title}) => {
 return (
     <div>
@@ -25,14 +50,20 @@ return (
 )
 };
 
-const MealItemAction = () => {
+const MealItemAction = (props) => {
+    const {ref} = props;
     return (
         <div>
             <div>
                 <StyledLabel htmlFor="">Amount</StyledLabel>
-                <StyledInput type="number" />
+                <StyledInput 
+                type="number" 
+                ref={ref} 
+                defaultValue='1' // Баштапкы мааниси 1
+                // value={ref.current.value}
+                />
             </div>
-            <button>+ Add</button>
+            <Button type='submit' variant = {'Addplus'} title={'Add'}/>
         </div>
     )
 };
@@ -57,7 +88,7 @@ const StyledInput = styled.input`
     margin-left: 20px;
 `
 
-const StyledDiv = styled.div`
+const StyledDiv = styled.form`
     display: flex;
     align-items: center;
     justify-content: space-between;
